@@ -1,7 +1,7 @@
 {
     "parser": "@typescript-eslint/parser",
     "plugins": ["@typescript-eslint/eslint-plugin", "prettier"],
-    "extends": ["plugin:@typescript-eslint/recommended", "plugin:prettier/recommended"],
+    "extends": ["plugin:@typescript-eslint/recommended"],
     "root": true,
     "env": {
         "node": true,
@@ -19,8 +19,6 @@
             }
         ],
         "prettier/prettier": "error",
-        "react-hooks/rules-of-hooks": "warn",
-        "react/display-name": "warn",
         "no-unused-vars": "off",
         "quotes": ["off", "double"],
         "indent": ["off", 0]
