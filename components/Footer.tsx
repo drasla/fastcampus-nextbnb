@@ -1,4 +1,5 @@
 import { twMerge } from "tailwind-merge";
+import Link from "next/link";
 
 export default function Footer() {
     return (
@@ -31,19 +32,19 @@ export default function Footer() {
                         "sm:mt-0",
                     )}>
                     <li>
-                        <a href={"#"} className={twMerge("hover:underline")}>
-                            개인정보 처리방침
-                        </a>
+                        <Link href={"/users/login"} className={twMerge("hover:underline")}>
+                            로그인
+                        </Link>
                     </li>
                     <li>
-                        <a href={"#"} className={twMerge("hover:underline")}>
-                            이용약관
-                        </a>
+                        <Link href={"/users/signIn"} className={twMerge("hover:underline")}>
+                            회원가입
+                        </Link>
                     </li>
                     <li>
-                        <a href={"#"} className={twMerge("hover:underline")}>
-                            회사 세부정보
-                        </a>
+                        <Link href={"/faqs"} className={twMerge("hover:underline")}>
+                            FAQ
+                        </Link>
                     </li>
                 </ul>
             </div>
