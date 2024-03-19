@@ -12,3 +12,40 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id    String  @id @default(uuid()) @map("_id")
+  email String  @unique
+  name  String?
+  image String?
+  desc  String?
+  rooms Room[]
+}
+
+model Room {
+  id                String   @id @default(uuid()) @map("_id")
+  title             String
+  images            String[]
+  address           String
+  lat               String
+  lng               String
+  category          String
+  desc              String
+  price             Int
+  bedroomDesc       String?
+  freeCancel        Boolean  @default(false)
+  selfCheckIn       Boolean  @default(false)
+  officeSpace       Boolean  @default(false)
+  hasMountainView   Boolean  @default(false)
+  hasShampoo        Boolean  @default(false)
+  hasFreeLaundry    Boolean  @default(false)
+  hasAirConditioner Boolean  @default(false)
+  hasWifi           Boolean  @default(false)
+  hasBarbeque       Boolean  @default(false)
+  hasFreeParking    Boolean  @default(false)
+
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
+
+  @@index([userId])
+}
