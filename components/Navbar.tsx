@@ -5,17 +5,11 @@ import { useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 import { MdModeOfTravel } from "react-icons/md";
 import { RxDividerVertical } from "react-icons/rx";
-import {
-    AiOutlineMenu,
-    AiOutlineMinusCircle,
-    AiOutlinePlusCircle,
-    AiOutlineSearch,
-    AiOutlineUser,
-} from "react-icons/ai";
-import dayjs from "dayjs";
-import "dayjs/locale/ko";
-import Calendar from "react-calendar";
-import { DetailFilterType, FilterProps } from "@/interface";
+import { AiOutlineMenu, AiOutlineSearch, AiOutlineUser } from "react-icons/ai";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { detailFilterState, filterState } from "@/atom";
+import Link from "next/link";
+import { SearchFilter } from "@/components/Filter";
 
 const menus = [
     { id: 1, title: "로그인", url: "/users/login" },
@@ -26,13 +20,9 @@ const menus = [
 export default function Navbar() {
     const [showMenu, setShowMenu] = useState(false);
     const [showFilter, setShowFilter] = useState(false);
-    const [detailFilter, setDetailFilter] = useState<null | DetailFilterType>(null);
-    const [filterValue, setFilterValue] = useState<FilterProps>({
-        location: "",
-        checkIn: "",
-        checkOut: "",
-        guest: 0,
-    });
+    const [detailFilter, setDetailFilter] = useRecoilState(detailFilterState);
+    const filterValue = useRecoilValue(filterState);
+
     const router = useRouter();
 
     return (
@@ -68,7 +58,9 @@ export default function Navbar() {
                     "sm:gap-2",
                 )}>
                 <MdModeOfTravel className={twMerge("text-4xl", "my-auto")} />
-                <div className={twMerge("my-auto")}>Nextbnb</div>
+                <Link href={"/"} className={twMerge("my-auto")}>
+                    Nextbnb
+                </Link>
             </div>
             {!showFilter ? (
                 <div
@@ -89,7 +81,10 @@ export default function Navbar() {
                     <div
                         role={"presentation"}
                         className={twMerge("flex", "justify-center", "gap-1", "cursor-pointer")}
-                        onClick={() => setShowFilter(true)}>
+                        onClick={() => {
+                            setDetailFilter("location");
+                            setShowFilter(true);
+                        }}>
                         <div className={twMerge("my-auto", "font-semibold", "text-sm")}>
                             어디든지
                         </div>
@@ -219,34 +214,7 @@ export default function Navbar() {
                                     {`${filterValue?.guest} 명` || "게스트 추가"}
                                 </div>
                             </button>
-                            {detailFilter === "location" && (
-                                <LocationFilter
-                                    filterValue={filterValue}
-                                    setFilterValue={setFilterValue}
-                                    setDetailFilter={setDetailFilter}
-                                />
-                            )}
-                            {detailFilter === "checkIn" && (
-                                <CheckInFilter
-                                    filterValue={filterValue}
-                                    setFilterValue={setFilterValue}
-                                    setDetailFilter={setDetailFilter}
-                                />
-                            )}
-                            {detailFilter === "checkOut" && (
-                                <CheckOutFilter
-                                    filterValue={filterValue}
-                                    setFilterValue={setFilterValue}
-                                    setDetailFilter={setDetailFilter}
-                                />
-                            )}
-                            {detailFilter === "guest" && (
-                                <GuestFilter
-                                    filterValue={filterValue}
-                                    setFilterValue={setFilterValue}
-                                    setDetailFilter={setDetailFilter}
-                                />
-                            )}
+                            <SearchFilter />
                         </div>
                         <button
                             type="button"
@@ -259,7 +227,6 @@ export default function Navbar() {
                                 "sm:w-24",
                                 "mt-4",
                                 "sm:mt-2",
-                                "md:mt-0",
                                 "my-auto",
                                 "flex",
                                 "justify-center",
@@ -360,217 +327,3 @@ export default function Navbar() {
         </nav>
     );
 }
-
-interface FilterComponentProps {
-    filterValue: FilterProps;
-    setFilterValue: React.Dispatch<React.SetStateAction<FilterProps>>;
-    setDetailFilter: React.Dispatch<React.SetStateAction<DetailFilterType | null>>;
-}
-
-const LocationFilter = ({ filterValue, setFilterValue, setDetailFilter }: FilterComponentProps) => {
-    return (
-        <div
-            className={twMerge(
-                "absolute",
-                "top-80",
-                "sm:top-[70px]",
-                "border",
-                "border-gray-200",
-                "px-8",
-                "py-10",
-                "flex",
-                "flex-col",
-                "bg-white",
-                "w-full",
-                "mx-auto",
-                "inset-x-0",
-                "sm:max-w-3xl",
-                "sm:w-[640px]",
-                "md:w-[780px]",
-                "rounded-xl",
-            )}>
-            <div className="text-sm font-semibold">지역으로 검색하기</div>
-            <div className="flex flex-wrap gap-4 mt-4">
-                {["서울", "부산", "대구", "인천", "광주", "대전", "울산"]?.map(value => (
-                    <button
-                        key={value}
-                        type="button"
-                        className={twMerge(
-                            "border",
-                            "rounded-lg",
-                            "px-5",
-                            "py-2.5",
-                            "hover:bg-gray-200",
-                            "focus:bg-rose-500",
-                            filterValue.location === value
-                                ? twMerge("bg-rose-600", "text-white")
-                                : "",
-                        )}
-                        onClick={() => {
-                            setFilterValue({
-                                ...filterValue,
-                                location: value,
-                            });
-                            setDetailFilter("checkIn");
-                        }}>
-                        {value}
-                    </button>
-                ))}
-            </div>
-        </div>
-    );
-};
-
-const CheckInFilter = ({ filterValue, setFilterValue, setDetailFilter }: FilterComponentProps) => {
-    const onChange = (e: any) => {
-        setFilterValue({
-            ...filterValue,
-            checkIn: dayjs(e).format("YYYY-MM-DD"),
-        });
-
-        setDetailFilter("checkOut");
-    };
-
-    return (
-        <div
-            className={twMerge(
-                "absolute",
-                "top-80",
-                "sm:top-[70px]",
-                "border",
-                "border-gray-200",
-                "px-8",
-                "py-10",
-                "flex",
-                "flex-col",
-                "bg-white",
-                "w-full",
-                "mx-auto",
-                "inset-x-0",
-                "sm:max-w-3xl",
-                "sm:w-[640px]",
-                "md:w-[780px]",
-                "rounded-xl",
-            )}>
-            <div className="text-sm font-semibold">체크인 날짜 설정하기</div>
-            <Calendar
-                className={twMerge("mt-8", "mx-auto")}
-                onChange={onChange}
-                minDate={new Date()}
-                defaultValue={filterValue.checkIn ? new Date(filterValue.checkIn) : null}
-                formatDay={(_, date) => dayjs(date).format("DD")}
-            />
-        </div>
-    );
-};
-
-const CheckOutFilter = ({ filterValue, setFilterValue, setDetailFilter }: FilterComponentProps) => {
-    const onChange = (e: any) => {
-        setFilterValue({
-            ...filterValue,
-            checkOut: dayjs(e).format("YYYY-MM-DD"),
-        });
-
-        setDetailFilter("guest");
-    };
-
-    return (
-        <div
-            className={twMerge(
-                "absolute",
-                "top-80",
-                "sm:top-[70px]",
-                "border",
-                "border-gray-200",
-                "px-8",
-                "py-10",
-                "flex",
-                "flex-col",
-                "bg-white",
-                "w-full",
-                "mx-auto",
-                "inset-x-0",
-                "sm:max-w-3xl",
-                "sm:w-[640px]",
-                "md:w-[780px]",
-                "rounded-xl",
-            )}>
-            <div className="text-sm font-semibold">체크아웃 날짜 설정하기</div>
-            <Calendar
-                className={twMerge("mt-8", "mx-auto")}
-                onChange={onChange}
-                minDate={filterValue.checkIn ? new Date(filterValue.checkIn) : new Date()}
-                defaultValue={filterValue.checkOut ? new Date(filterValue.checkOut) : null}
-                formatDay={(_, date) => dayjs(date).format("DD")}
-            />
-        </div>
-    );
-};
-
-const GuestFilter = ({ filterValue, setFilterValue, setDetailFilter: _ }: FilterComponentProps) => {
-    const [counter, setCounter] = useState<number>(filterValue.guest || 0);
-
-    return (
-        <div
-            className={twMerge(
-                "absolute",
-                "top-80",
-                "sm:top-[70px]",
-                "border",
-                "border-gray-200",
-                "px-8",
-                "py-10",
-                "flex",
-                "flex-col",
-                "bg-white",
-                "w-full",
-                "mx-auto",
-                "inset-x-0",
-                "sm:max-w-3xl",
-                "sm:w-[640px]",
-                "md:w-[780px]",
-                "rounded-xl",
-            )}>
-            <div className="text-sm font-semibold">게스트 수 추가하기</div>
-            <div className="mt-4 border border-gray-200 rounded-lg py-2 px-4 flex justify-between items-center">
-                <div>
-                    <div className="font-semibold text-sm">게스트 수 추가</div>
-                    <div className="text-gray-500 text-xs">숙박 인원을 입력해주세요</div>
-                </div>
-                <div className="flex gap-4 items-center justify-center">
-                    <button
-                        type="button"
-                        className="rounded-full w-8 h-8 disabled:border-gray-200 hover:border-black"
-                        disabled={counter <= 0}
-                        onClick={() => {
-                            setCounter(val => val - 1);
-                            setFilterValue({
-                                ...filterValue,
-                                guest: counter - 1,
-                            });
-                        }}>
-                        <AiOutlineMinusCircle
-                            className={twMerge("m-auto", counter <= 0 ? "text-gray-200" : "")}
-                        />
-                    </button>
-                    <div className="w-3 text-center">{counter}</div>
-                    <button
-                        type="button"
-                        className="rounded-full w-8 h-8 disabled:border-gray-200 hover:border-black"
-                        disabled={counter >= 20}
-                        onClick={() => {
-                            setCounter(val => val + 1);
-                            setFilterValue({
-                                ...filterValue,
-                                guest: counter + 1,
-                            });
-                        }}>
-                        <AiOutlinePlusCircle
-                            className={twMerge("m-auto", counter >= 20 ? "text-gray-200" : "")}
-                        />
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
-};
