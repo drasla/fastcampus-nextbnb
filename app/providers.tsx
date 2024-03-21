@@ -2,10 +2,15 @@ import React, { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { RecoilRoot } from "recoil";
 
 interface Props {
     children?: ReactNode;
 }
+
+export const NextProvider = ({ children }: Props) => {
+    return <RecoilRoot>{children}</RecoilRoot>;
+};
 
 export const NextLayout = ({ children }: Props) => {
     return (

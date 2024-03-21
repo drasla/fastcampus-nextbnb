@@ -15,21 +15,13 @@ import {
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import Calendar from "react-calendar";
+import { DetailFilterType, FilterProps } from "@/interface";
 
 const menus = [
     { id: 1, title: "로그인", url: "/users/login" },
     { id: 2, title: "회원가입", url: "/users/signup" },
     { id: 3, title: "FAQ", url: "/faqs" },
 ];
-
-type DetailFilterType = "location" | "checkIn" | "checkOut" | "guest";
-
-interface FilterProps {
-    location: string;
-    checkIn: string;
-    checkOut: string;
-    guest: number;
-}
 
 export default function Navbar() {
     const [showMenu, setShowMenu] = useState(false);
