@@ -23,9 +23,6 @@ const LocationFilter = () => {
     const [filterValue, setFilterValue] = useRecoilState(filterState);
     const [detailFilter, setDetailFilter] = useRecoilState(detailFilterState);
 
-    console.log(filterValue);
-    console.log(detailFilter);
-
     return (
         <FilterLayout title={"지역으로 검색하기"} isShow={detailFilter === "location"}>
             <div className={twMerge("flex", "flex-wrap", "gap-4", "mt-4")}>

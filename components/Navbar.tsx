@@ -28,9 +28,11 @@ export default function Navbar() {
     return (
         <nav
             className={twMerge(
+                "z-10",
                 "border",
                 "border-b-gray-20",
                 "w-full",
+                "h-20",
                 "shadow-sm",
                 "p-4",
                 "sm:px-10",

@@ -6,6 +6,7 @@ export default function FilterLayout({ children, title, isShow }: FilterLayoutPr
     return (
         <div
             className={twMerge(
+                "z-10",
                 "absolute",
                 "top-80",
                 "sm:top-[70px]",
