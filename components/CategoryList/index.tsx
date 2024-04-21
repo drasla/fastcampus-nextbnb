@@ -24,7 +24,7 @@ export default function CategoryList() {
                 "sm:pr-16",
                 "px-2",
                 "bg-white",
-                "z-1",
+                "z-10",
                 "mb-6",
             )}>
             {CATEGORY_DATA.map(category => (
