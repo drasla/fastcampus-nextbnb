@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import { twMerge } from "tailwind-merge";
+"use client";
+
 import { RoomType } from "@/interface";
 import CategoryList from "@/components/CategoryList";
 import { GridLayout, RoomItem } from "@/components/RoomList";

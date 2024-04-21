@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { faker } from "@faker-js/faker";
-import { CATEGORY } from "@/constants";
+import { CATEGORY } from "../constants";
 
 const prisma = new PrismaClient();
 
@@ -113,8 +113,24 @@ function getRandomLongtitude() {
         ?.toString();
 }
 
+async function seedFaqs() {
+    for (const item of Array.from({ length: 10 }, (_, i) => i)) {
+        const faqData = {
+            title: faker.lorem.words(),
+            desc: faker.lorem.paragraph(),
+        };
+
+        const res = await prisma.faq.create({
+            data: faqData,
+        });
+
+        console.log(res);
+    }
+}
+
 async function main() {
-    await seedRooms();
+    // await seedRooms();
+    await seedFaqs();
 }
 
 main()

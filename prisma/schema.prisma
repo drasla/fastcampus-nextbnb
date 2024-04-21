@@ -49,3 +49,9 @@ model Room {
 
   @@index([userId])
 }
+
+model Faq {
+  id    String @id @default(uuid()) @map("_id")
+  title String
+  desc  String
+}
